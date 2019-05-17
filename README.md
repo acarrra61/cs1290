@@ -1,1 +1,121 @@
 # cs1290
+import java.util.*;
+
+public class IntegerBreak
+{
+  public static void main(String[] args)
+  {
+    System.out.println(representIntegerBreak(integerBreak(5)));
+  }
+  
+  /**
+   * Linked list format [x]->[y]->[z]->...->[x*y*z*...]
+   * Last element is product of other elements
+   */
+  public static LinkedList<Integer> integerBreak(int n){
+    
+    LinkedList<LinkedList<Integer>> resultList = new LinkedList<LinkedList<Integer>>();
+    if(n <= 1)
+    {
+      LinkedList<Integer> twoList = new LinkedList<Integer>();
+      twoList.add(1);
+      twoList.add(1);
+      return twoList;
+    }
+    if(n == 2)
+    {
+      LinkedList<Integer> twoList = new LinkedList<Integer>();
+      twoList.add(1);
+      twoList.add(1);
+      twoList.add(1);
+      return twoList;
+    }
+    for(int i = 1; i <= n-2; i++)
+    {
+      // x + y = n
+      int x = i;
+      int y = n-i;
+      LinkedList<Integer> xList = new LinkedList<Integer>();
+      xList.add(x);
+      xList.add(x);
+      xList = maxProductList(xList, integerBreak(x));
+      LinkedList<Integer> yList = new LinkedList<Integer>();
+      yList.add(y);
+      yList.add(y);
+      yList = maxProductList(yList, integerBreak(y));
+      resultList.add(combineLists(xList,yList));
+    }
+    LinkedList<Integer> maxList = new LinkedList<Integer>();
+    maxList.add(0);
+    for(int j = 0; j < resultList.size(); j++)
+    {
+      LinkedList<Integer> tempList = resultList.get(j);
+      if(tempList.get(tempList.size() - 1) > maxList.get(maxList.size() - 1))
+      {
+        maxList = tempList;
+      }
+    }
+    return maxList;
+  } 
+  public static LinkedList<Integer> maxProductList(LinkedList<Integer> list1, LinkedList<Integer> list2)
+  {
+    if(list1.get(list1.size() - 1) > list2.get(list2.size() - 1))
+    {
+      return list1;
+    }
+    return list2;
+  }
+  public static LinkedList<Integer> combineLists(LinkedList<Integer> list1, LinkedList<Integer> list2)
+  {
+    LinkedList<Integer> tempList = new LinkedList<Integer>();
+    tempList.addAll(list1);
+    tempList.remove(tempList.size() - 1);
+    tempList.addAll(list2);
+    tempList.remove(tempList.size() - 1);
+    int product1 = list1.get(list1.size() - 1);
+    int product2 = list2.get(list2.size() - 1);
+    tempList.add(product1 * product2);
+    return tempList;
+  }
+  
+  // Returns list in format "x + y = n, x * y = m"
+  public static String representIntegerBreak(LinkedList<Integer> intBreakList)
+  {
+    if(intBreakList.size() == 0)
+    {
+      return "List is empty";
+    }
+    if(intBreakList.size() == 1)
+    {
+      return "List has one element "+intBreakList.get(0);
+    }
+    String sumString = "";
+    String productString = "";
+    int sum = 0;
+    for(int i = 0; i < intBreakList.size() - 1; i++)
+    {
+      sumString += intBreakList.get(i)+" + ";
+      sum += intBreakList.get(i);
+      productString += intBreakList.get(i) + " * ";
+    }
+    if(intBreakList.size() > 1)
+    {
+      sumString = sumString.substring(0, sumString.length() - " + ".length());
+      productString = productString.substring(0, productString.length() - " * ".length());
+    }
+    sumString += " = " + sum;
+    productString += " = " + intBreakList.get(intBreakList.size() - 1);
+    return sumString + ", " + productString;
+  }
+  
+  public static String listToString(LinkedList<Integer> list)
+  {
+    String temp = "";
+    for(int i = 0; i < list.size(); i++)
+    {
+      temp += ("["+list.get(i)+"]->");
+    }
+    temp += ("NULL");
+    return temp;
+  }
+}
