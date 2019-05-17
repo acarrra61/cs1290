@@ -1,0 +1,70 @@
+import java.util.LinkedList;
+
+public class PerfectSquares
+{
+  public static void main(String[] args)
+  {
+    int n = 12;
+    LinkedList<Integer> list = perfectSquares(n);
+    System.out.println("Input: n = " + n);
+    System.out.println("Output: " + list.size());
+    System.out.println("Explanation: " + explanation(list));
+  }
+
+  public static LinkedList<Integer> perfectSquares(int n)
+  {
+    LinkedList<Integer> sumList = new LinkedList<Integer>();
+    if (isPerfectSquare(n))
+    {
+      sumList.add(n);
+      return sumList;
+    }
+
+    int count = n;
+    for (int i = 1; i * i < n; i++)
+    {
+      LinkedList<Integer> tempSumList = perfectSquares(n - i * i);
+      tempSumList.add(i * i);
+      int tempCount = tempSumList.size();
+      if (tempCount < count && sum(tempSumList) == n)
+      {
+        sumList = tempSumList;
+      }
+    }
+    return sumList;
+  }
+
+  private static int sum(LinkedList<Integer> list)
+  {
+    int sum = 0;
+    for(int i = 0; i < list.size(); i++)
+    {
+      sum += list.get(i);
+    }
+    return sum;
+  }
+
+  public static boolean isPerfectSquare(int n)
+  {
+    int sqrt = (int) Math.sqrt(n);
+    return sqrt * sqrt == n;
+  }
+
+  public static String explanation(LinkedList<Integer> list)
+  {
+    String explain = "";
+    int sum = 0;
+    for (int i = 0; i < list.size(); i++)
+    {
+      sum += list.get(i);
+      explain += list.get(i) + " + ";
+    }
+    if (list.size() >= 2)
+    {
+      explain = explain.substring(0, explain.length() - " + ".length());
+    }
+    explain += " = " + sum;
+    return explain;
+  }
+}
+
