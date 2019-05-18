@@ -1,0 +1,71 @@
+import java.util.LinkedList;
+
+public class PalindromicSubstrings
+{
+  public static void main(String[] args)
+  {
+    String s = "abc";
+    LinkedList<String> list = palindromicSubstrings(s);
+    System.out.println("Input: \"" + s + "\"");
+    System.out.println("Output: " + list.size());
+    System.out.println("Explanation: " + explanation(list));
+  }
+
+  private static String explanation(LinkedList<String> list)
+  {
+    String explain = "";
+    for (int i = 0; i < list.size(); i++)
+    {
+      explain += list.get(i) + ", ";
+    }
+    if (list.size() >= 2)
+    {
+      explain = explain.substring(0, explain.length() - ", ".length());
+    }
+    return explain;
+  }
+
+  private static LinkedList<String> palindromicSubstrings(String s,
+      int substringLength)
+  {
+    LinkedList<String> substringList = new LinkedList<String>();
+    int subsetsCount = s.length() - substringLength;
+    if (substringLength == s.length())
+    {
+      if (isPalindrome(s))
+      {
+        substringList.add(s);
+      }
+      return substringList;
+    }
+    for (int i = 0; i < subsetsCount; i++)
+    {
+      String substring = s.substring(i, substringLength + i + 1);
+      if (isPalindrome(substring))
+      {
+        substringList.add(substring);
+      }
+    }
+    substringList.addAll(palindromicSubstrings(s, substringLength + 1));
+    return substringList;
+  }
+
+  private static LinkedList<String> palindromicSubstrings(String s)
+  {
+    return palindromicSubstrings(s, 0);
+  }
+
+  private static boolean isPalindrome(String s)
+  {
+    if (s.length() <= 1)
+    {
+      return true;
+    }
+    if (s.charAt(0) != s.charAt(s.length() - 1))
+    {
+      return false;
+    }
+    return isPalindrome(s.substring(1, s.length() - 1));
+  }
+
+}
